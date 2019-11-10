@@ -42,10 +42,21 @@ namespace TableDisco
         }  
         ssid = SSID + " #" + String(discoCount);
         WiFi.softAP(ssid, Password, 1, false, 8);
-
+        Serial.println("Disco IP: " + WiFi.softAPIP().toString());
+        
         Serial.println("Lets Party!");
         led.blink(CRGB::Green);
     }
 
-    bool Mesh::isRoot() { return ssid.endsWith(" #0"); }
+    bool Mesh::isRoot() 
+    { 
+        return ssid.endsWith(" #0"); 
+    }
+
+    String Mesh::getParentIp() 
+    { 
+        return isRoot() 
+            ? WiFi.softAPIP().toString() 
+            : WiFi.gatewayIP().toString(); 
+    }
 }

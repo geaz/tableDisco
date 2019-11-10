@@ -18,6 +18,7 @@ namespace TableDisco
 
             void setup();
             bool isRoot();
+            String getParentIp();
 
         private:
             LED& led;

@@ -3,13 +3,25 @@
 
 #include "led/led.hpp"
 #include "mesh/mesh.hpp"
+#include "websocket/socket_server.hpp"
+#include "websocket/socket_client.hpp"
 #include "visualization/visualization.hpp"
 
 TableDisco::LED led;
 TableDisco::Mesh mesh(led);
 TableDisco::Visualization visualization(led);
+TableDisco::SocketServer socketServer;
+TableDisco::SocketClient socketClient;
 
 short lastButtonVal = LOW;
+
+void checkModeButton()
+{
+    short buttonVal = digitalRead(D2);
+    if(buttonVal == HIGH && lastButtonVal == LOW)
+        visualization.toogleDiscoMode();
+    lastButtonVal = buttonVal;
+}
 
 void setup() 
 {
@@ -17,15 +29,21 @@ void setup()
     Serial.println("Starting TableDisco ...");
     pinMode(D2, INPUT); 
 
-    mesh.setup();    
+    mesh.setup();
+    if(!mesh.isRoot())
+    {
+        socketClient.start(mesh.getParentIp());
+    }
 }
 
+int count = 0;
 void loop() 
 {
-    short buttonVal = digitalRead(D2);
-    if(buttonVal == HIGH && lastButtonVal == LOW)
-        visualization.toogleDiscoMode();
-    lastButtonVal = buttonVal;
-
-    visualization.loop();
+    checkModeButton();
+    if(mesh.isRoot())
+    {
+        visualization.loop();
+        socketServer.broadcast("Test " + String(count++));
+    }    
+    socketServer.loop();
 }
