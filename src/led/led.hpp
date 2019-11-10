@@ -7,8 +7,8 @@
 
 namespace TableDisco
 {
-    static const uint8_t LedCount = 4;
-    static const uint8_t DataPin = D3;
+    static const short LedCount = 4;
+    static const short DataPin = D3;
 
     class LED
     {    
@@ -16,9 +16,9 @@ namespace TableDisco
             LED();
 
             void setColor(CRGB color);
-            void setBrightness(uint8_t brightness);
-            void fade(const float factor, const uint8_t stopBrightness);
-            void blink(const CRGB color, const uint8_t times = 3);
+            void setBrightness(short brightness);
+            void fade(const float factor, const short stopBrightness);
+            void blink(const CRGB color, const short times = 3);
 
         private:
             void setAllLeds(CRGB color);

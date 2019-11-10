@@ -2,14 +2,14 @@
 #include <FastLED.h>
 
 #include "led/led.hpp"
-#include "wifi/wifi.hpp"
+#include "mesh/mesh.hpp"
 #include "visualization/visualization.hpp"
 
 TableDisco::LED led;
-TableDisco::Wifi wifi(led);
+TableDisco::Mesh mesh(led);
 TableDisco::Visualization visualization(led);
 
-uint8_t lastButtonVal = LOW;
+short lastButtonVal = LOW;
 
 void setup() 
 {
@@ -17,12 +17,12 @@ void setup()
     Serial.println("Starting TableDisco ...");
     pinMode(D2, INPUT); 
 
-    wifi.checkMode();
+    mesh.setup();    
 }
 
 void loop() 
 {
-    uint8_t buttonVal = digitalRead(D2);
+    short buttonVal = digitalRead(D2);
     if(buttonVal == HIGH && lastButtonVal == LOW)
         visualization.toogleDiscoMode();
     lastButtonVal = buttonVal;

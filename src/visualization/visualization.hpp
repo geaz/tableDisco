@@ -5,7 +5,9 @@
 #include "../led/led.hpp"
 
 namespace TableDisco
-{
+{    
+    static const uint8_t SampleWindow = 20;
+
     class Visualization
     {
         public:
@@ -13,16 +15,16 @@ namespace TableDisco
 
             void loop();
             void toogleDiscoMode();
-            void setBrightnessRange(const uint8_t newMinBrightness, const uint8_t newMaxBrightness);
+            void setBrightnessRange(const short newMinBrightness, const short newMaxBrightness);
 
         private:
             LED& led;
             bool isDiscoMode = false;
             float lastVolume = 0;
-            uint32_t maxValue = 0;
-            uint32_t minValue = 1023;
-            uint8_t minBrightness = 1;
-            uint8_t maxBrightness = 90;
+            unsigned int signalMaxOverall = 700; // Start Values to get an effect even in silent environments
+            unsigned int signalMinOverall = 300; // Start Values to get an effect even in silent environments
+            unsigned short minBrightness = 0;
+            unsigned short maxBrightness = 200;
     };
 }
 

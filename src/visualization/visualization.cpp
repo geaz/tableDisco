@@ -8,12 +8,37 @@ namespace TableDisco
     {
         if(!isDiscoMode) return;
         led.fade(0.75, minBrightness);
+    
+        unsigned int signalMax = 0;
+        unsigned int signalMin = 1024;
+        unsigned int signalCount = 0;
+        unsigned long signalSquare = 0;
+        unsigned long startMillis = millis();    
 
-        uint32_t currentValue = analogRead(A0);
-        minValue = currentValue < minValue ? currentValue : minValue;
-        maxValue = currentValue > maxValue ? currentValue : maxValue;
-        
-        float silentValue = (maxValue + minValue) / 2.0;
+        while(millis() - startMillis < SampleWindow)
+        {
+            unsigned int sample = analogRead(A0);
+            signalMin = min(signalMin, sample);
+            signalMax = max(signalMax, sample);
+            signalSquare += sample * sample;
+            signalCount++;
+        }
+        signalMinOverall = min(signalMinOverall, signalMin);
+        signalMaxOverall = max(signalMaxOverall, signalMax);
+
+        float silentValue = (signalMaxOverall + signalMinOverall) / 2.0;
+        double signalRMS = sqrt(signalSquare / signalCount);
+        unsigned long volume = map(abs(signalRMS - silentValue), 0, 511, 0, 100);
+
+        Serial.print("Samples: " + String(signalCount));
+        Serial.print("| Min (Samples, Overall): " + String(signalMin) + ", " + String(signalMinOverall));
+        Serial.print("| Max (Samples, Overall): " + String(signalMax) + ", " + String(signalMaxOverall));
+        Serial.print("| Root Mean Square: " + String(signalRMS));
+        Serial.print("| Silent: " + String(silentValue));
+        Serial.print("| Volume: " + String(volume));
+        Serial.println("");
+
+        /*float silentValue = (maxValue + minValue) / 2.0;
         float totalTicks = (maxValue - minValue) / 2.0;
 
         // Volume 0.0 - 1
@@ -38,8 +63,8 @@ namespace TableDisco
 
             led.setBrightness(newBrightness);
         }
-        lastVolume = volume;  
-        delay(30); 
+        lastVolume = volume;  */
+        FastLED.delay(30); 
     }
 
     void Visualization::toogleDiscoMode()
@@ -53,7 +78,7 @@ namespace TableDisco
         }
     }
 
-    void Visualization::setBrightnessRange(const uint8_t newMinBrightness, const uint8_t newMaxBrightness)
+    void Visualization::setBrightnessRange(const short newMinBrightness, const short newMaxBrightness)
     {
         minBrightness = newMinBrightness;
         maxBrightness = newMaxBrightness;
