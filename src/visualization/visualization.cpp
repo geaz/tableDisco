@@ -1,3 +1,4 @@
+#include "Adafruit_ZeroFFT.h"
 #include "visualization.hpp"
 
 namespace TableDisco
@@ -8,7 +9,7 @@ namespace TableDisco
     {
         if(!isDiscoMode) return;
         led.fade(0.75, minBrightness);
-    
+
         unsigned int signalMax = 0;
         unsigned int signalMin = 1024;
         unsigned int signalCount = 0;
@@ -21,50 +22,69 @@ namespace TableDisco
             signalMin = min(signalMin, sample);
             signalMax = max(signalMax, sample);
             signalSquare += sample * sample;
+            
+            if(signalCount < FFTDataSize) fftData[signalCount] = sample;
             signalCount++;
         }
-        signalMinOverall = min(signalMinOverall, signalMin);
-        signalMaxOverall = max(signalMaxOverall, signalMax);
-
-        float silentValue = (signalMaxOverall + signalMinOverall) / 2.0;
         double signalRMS = sqrt(signalSquare / signalCount);
-        unsigned long volume = map(abs(signalRMS - silentValue), 0, 511, 0, 100);
+        signalRMS = abs(signalRMS - 512); 
+        signalRMS = signalRMS <= Noise ? 0 : signalRMS - Noise;
 
-        Serial.print("Samples: " + String(signalCount));
-        Serial.print("| Min (Samples, Overall): " + String(signalMin) + ", " + String(signalMinOverall));
-        Serial.print("| Max (Samples, Overall): " + String(signalMax) + ", " + String(signalMaxOverall));
-        Serial.print("| Root Mean Square: " + String(signalRMS));
-        Serial.print("| Silent: " + String(silentValue));
-        Serial.print("| Volume: " + String(volume));
-        Serial.println("");
+        unsigned short volume = map(signalRMS, 0, 512, 0, 100); 
+        if(volume > lastVolumeDeque.front()) 
+        {            
+            unsigned short minVolume = volume;
+            unsigned short maxVolume = volume;
+            for(unsigned short lastVol : lastVolumeDeque) {
+                minVolume = min(minVolume, lastVol);
+                maxVolume = max(maxVolume, lastVol);
+            } 
+            maxVolume = max(maxVolume, MinMaxVolume);
+            
+            unsigned short newBrightness = map(volume, minVolume, maxVolume, minBrightness, maxBrightness);
+            double newBrightnessFactor = (double)newBrightness / maxBrightness;
 
-        /*float silentValue = (maxValue + minValue) / 2.0;
-        float totalTicks = (maxValue - minValue) / 2.0;
+            ZeroFFT(fftData, FFTDataSize);
+            unsigned int dominantFrequency = 0;
+            int dominantFrequencyData = 0;
 
-        // Volume 0.0 - 1
-        float volume = fabs(currentValue - silentValue) / totalTicks;
+            // Discard first two bins (We want to ignore silence)
+            for(int i = 2; i < FFTDataSize / 2; i++)
+            {
+                if(fftData[i] > dominantFrequencyData)
+                {
+                    dominantFrequency = FFT_BIN(i, SampleRate, FFTDataSize);
+                    dominantFrequencyData = fftData[i];
+                }
+            }
+            dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
+            if(dominantFrequency < MidFrequency)
+            {
+                unsigned short mappedRed = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.red, MidFreqColor.red);
+                unsigned short mappedGreen = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.green, MidFreqColor.green);
+                unsigned short mappedBlue = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.blue, MidFreqColor.blue);
+                led.setColor(CRGB(mappedRed * newBrightnessFactor, mappedGreen * newBrightnessFactor, mappedBlue * newBrightnessFactor));
+            }
+            else
+            {
+                unsigned short mappedRed = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.red, HighFreqColor.red);
+                unsigned short mappedGreen = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.green, HighFreqColor.green);
+                unsigned short mappedBlue = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.blue, HighFreqColor.blue);
+                led.setColor(CRGB(mappedRed * newBrightnessFactor, mappedGreen * newBrightnessFactor, mappedBlue * newBrightnessFactor));
+            }
 
-        if(volume > lastVolume && volume > 0.1)
-        {
-            Serial.print("Volume: ");
-            Serial.println(volume);
-            Serial.print("MinB: ");
-            Serial.println(minBrightness);
-            Serial.print("MaxB: ");
-            Serial.println(maxBrightness);
-            Serial.print("MinV: ");
-            Serial.println(minValue);
-            Serial.print("MaxV: ");
-            Serial.println(maxValue);
+            Serial.print("Sample RMS: " + String(signalRMS));
+            Serial.print("| Sample Count: " + String(signalCount));
+            Serial.print("| Volume (min, max): " + String(minVolume) + " " + String(maxVolume));
+            Serial.print("| Volume (current): " + String(volume));
+            Serial.print("| New Brightness: " + String(newBrightness));
+            Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
+            Serial.println("");
+        } 
+        lastVolumeDeque.push_front(volume);
+        if(lastVolumeDeque.size() > MaxVolumes) lastVolumeDeque.pop_back();
 
-            uint8_t newBrightness = ((maxBrightness - minBrightness) * volume) + minBrightness;        
-            Serial.print("Brightness: ");
-            Serial.println(newBrightness);
-
-            led.setBrightness(newBrightness);
-        }
-        lastVolume = volume;  */
-        FastLED.delay(30); 
+        delay(30); 
     }
 
     void Visualization::toogleDiscoMode()
