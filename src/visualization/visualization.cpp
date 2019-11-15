@@ -16,9 +16,14 @@ namespace TableDisco
             unsigned char volumeBrightness = getVolumeBrightness(sampleRMS);
             unsigned short dominantFrequency = getDominantFrequency();
             visualizeData(volumeBrightness, dominantFrequency);
-        }
+
+            Serial.print("Sample RMS: " + String(sampleRMS));
+            Serial.print("| New Brightness: " + String(volumeBrightness));
+            Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
+            Serial.println("");
+        }        
         lastRMSDeque.push_front(sampleRMS);
-        if(lastRMSDeque.size() > MaxRMSCount) lastRMSDeque.pop_back();
+        if(lastRMSDeque.size() > MaxRMSCount) lastRMSDeque.pop_back();      
 
         delay(30); 
     }
@@ -56,9 +61,6 @@ namespace TableDisco
         sampleRMS = abs(sampleRMS - 512); 
         sampleRMS = sampleRMS <= Noise ? 0 : sampleRMS - Noise;
 
-        Serial.print("Sample RMS: " + String(sampleRMS));
-        Serial.print("| Sample Count: " + String(signalCount));
-
         return sampleRMS;
     }
 
@@ -71,12 +73,8 @@ namespace TableDisco
             maxRMS = max(maxRMS, lastRMS);
         }
         maxRMS = max(maxRMS, MinimumMaxRMS);
-        unsigned char volumeBrightness = map(sampleRMS, minRMS, maxRMS, 0, 255);
-        
-        Serial.print("| RMS (min, max): " + String(minRMS) + " " + String(maxRMS));
-        Serial.print("| New Brightness: " + String(volumeBrightness));
 
-        return volumeBrightness;
+        return map(sampleRMS, minRMS, maxRMS, 0, 255);
     }
 
     unsigned short Visualization::getDominantFrequency() 
@@ -94,11 +92,7 @@ namespace TableDisco
                 dominantFrequencyData = fftData[i];
             }
         }
-        dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
-        Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
-        Serial.println("");
-
-        return dominantFrequency;
+        return dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
     }
 
     void Visualization::visualizeData(unsigned char volumeBrightness, unsigned short dominantFrequency)

@@ -7,12 +7,12 @@
 
 namespace TableDisco
 {    
-    static const unsigned char Noise = 10;
+    static const unsigned char Noise = 35;  // Pretty high noise, because of the LEDs even with the capacitor
     static const unsigned char MaxRMSCount = 100;
     static const unsigned char SampleWindow = 50;
     static const unsigned short FFTDataSize = 256;
     static const unsigned short SampleRate = 10000;
-    static const double MinimumMaxRMS = 512 / 2;
+    static const double MinimumMaxRMS = 512 / 3;
 
     static const Color LowFreqColor = TableDisco::Blue;
     static const Color MidFreqColor = TableDisco::Green;
