@@ -13,11 +13,11 @@ TableDisco::Visualization visualization(led);
 TableDisco::SocketServer socketServer;
 TableDisco::SocketClient socketClient;
 
-short lastButtonVal = LOW;
+char lastButtonVal = LOW;
 
 void checkModeButton()
 {
-    short buttonVal = digitalRead(D2);
+    char buttonVal = digitalRead(D2);
     if(buttonVal == HIGH && lastButtonVal == LOW)
         visualization.toogleDiscoMode();
     lastButtonVal = buttonVal;

@@ -33,19 +33,19 @@ namespace TableDisco
         WiFi.mode(WIFI_AP_STA);
         if(nearestTableDisco != -1) 
         {
-            led.setColor(CRGB::Yellow);
+            led.setColor(TableDisco::Yellow);
             Serial.println("Connecting to '" + WiFi.SSID(nearestTableDisco) + "' ...");
             WiFi.begin(WiFi.SSID(nearestTableDisco), Password);
             
             Serial.println("Connected to Disco ...");
-            led.blink(CRGB::Yellow);
+            led.blink(TableDisco::Yellow);
         }  
         ssid = SSID + " #" + String(discoCount);
         WiFi.softAP(ssid, Password, 1, false, 8);
         Serial.println("Disco IP: " + WiFi.softAPIP().toString());
         
         Serial.println("Lets Party!");
-        led.blink(CRGB::Green);
+        led.blink(TableDisco::Green);
     }
 
     bool Mesh::isRoot() 
