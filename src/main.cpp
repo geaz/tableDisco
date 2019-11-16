@@ -5,21 +5,24 @@
 #include "mesh/mesh.hpp"
 #include "websocket/socket_server.hpp"
 #include "websocket/socket_client.hpp"
-#include "visualization/visualization.hpp"
+#include "visualization/visualization_server.hpp"
+#include "visualization/visualization_client.hpp"
 
 TableDisco::LED led;
 TableDisco::Mesh mesh(led);
-TableDisco::Visualization visualization(led);
 TableDisco::SocketServer socketServer;
 TableDisco::SocketClient socketClient;
+TableDisco::VisualizationServer visualizationServer(led, socketServer);
 
 char lastButtonVal = LOW;
 
 void checkModeButton()
 {
     char buttonVal = digitalRead(D2);
-    if(buttonVal == HIGH && lastButtonVal == LOW)
-        visualization.toogleDiscoMode();
+    if(buttonVal == HIGH && lastButtonVal == LOW && mesh.isRoot())
+        visualizationServer.toogleDiscoMode();
+    else if(buttonVal == HIGH && lastButtonVal == LOW)        
+        visualizationServer.toogleDiscoMode();
     lastButtonVal = buttonVal;
 }
 
@@ -42,8 +45,7 @@ void loop()
     checkModeButton();
     if(mesh.isRoot())
     {
-        visualization.loop();
-        socketServer.broadcast("Test " + String(count++));
+        visualizationServer.loop();
     }    
     socketServer.loop();
 }

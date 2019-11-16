@@ -4,6 +4,7 @@
 
 #include <deque>
 #include "../led/led.hpp"
+#include "../websocket/socket_server.hpp"
 
 namespace TableDisco
 {    
@@ -22,10 +23,10 @@ namespace TableDisco
     static const short MidFrequency = 1046; // Highest note reproducible by average female
     static const short MaxFrequency = 2093; // Everything above will be full HighFreqColor
 
-    class Visualization
+    class VisualizationServer
     {
         public:
-            Visualization(LED& led);
+            VisualizationServer(LED& led, SocketServer& socketServer);
 
             void loop();
             void toogleDiscoMode();
@@ -34,9 +35,10 @@ namespace TableDisco
             double collectSamples();
             unsigned char getVolumeBrightness(const float sampleRMS) const;
             unsigned short getDominantFrequency();
-            void visualizeData(unsigned char volumeBrightness, unsigned short dominantFrequency);
+            Color getNewColor(unsigned char volumeBrightness, unsigned short dominantFrequency);
 
             LED& led;
+            SocketServer& socketServer;
             bool isDiscoMode = false;
             int16_t fftData[FFTDataSize];
             std::deque<double> lastRMSDeque;

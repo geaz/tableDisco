@@ -1,11 +1,12 @@
 #include "Adafruit_ZeroFFT.h"
-#include "visualization.hpp"
+#include "visualization_server.hpp"
 
 namespace TableDisco
 {
-    Visualization::Visualization(LED& led) : led(led) { }
+    VisualizationServer::VisualizationServer(LED& led, SocketServer& socketServer) 
+        : led(led), socketServer(socketServer) { }
 
-    void Visualization::loop()
+    void VisualizationServer::loop()
     {
         if(!isDiscoMode) return;
         led.fade(64);
@@ -15,11 +16,15 @@ namespace TableDisco
         {
             unsigned char volumeBrightness = getVolumeBrightness(sampleRMS);
             unsigned short dominantFrequency = getDominantFrequency();
-            visualizeData(volumeBrightness, dominantFrequency);
+            Color color = getNewColor(volumeBrightness, dominantFrequency);
+            
+            socketServer.broadcast(String(color.Red) + "," + String(color.Green) + "," + String(color.Blue));
+            led.setColor(color);
 
             Serial.print("Sample RMS: " + String(sampleRMS));
             Serial.print("| New Brightness: " + String(volumeBrightness));
             Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
+            Serial.print("| New Color: " + String(color.Red) + " " + String(color.Green) + " " + String(color.Blue));
             Serial.println("");
         }        
         lastRMSDeque.push_front(sampleRMS);
@@ -28,7 +33,7 @@ namespace TableDisco
         delay(30); 
     }
 
-    void Visualization::toogleDiscoMode()
+    void VisualizationServer::toogleDiscoMode()
     {
         isDiscoMode = !isDiscoMode;
         if(!isDiscoMode) led.setColor(TableDisco::Ivory);
@@ -39,7 +44,7 @@ namespace TableDisco
         }
     }
 
-    double Visualization::collectSamples()
+    double VisualizationServer::collectSamples()
     {
         unsigned short signalMax = 0;
         unsigned short signalMin = 1024;
@@ -64,7 +69,7 @@ namespace TableDisco
         return sampleRMS;
     }
 
-    unsigned char Visualization::getVolumeBrightness(const float sampleRMS) const
+    unsigned char VisualizationServer::getVolumeBrightness(const float sampleRMS) const
     {
         double minRMS = sampleRMS;
         double maxRMS = sampleRMS;
@@ -77,7 +82,7 @@ namespace TableDisco
         return map(sampleRMS, minRMS, maxRMS, 0, 255);
     }
 
-    unsigned short Visualization::getDominantFrequency() 
+    unsigned short VisualizationServer::getDominantFrequency() 
     {
         ZeroFFT(fftData, FFTDataSize);
         unsigned short dominantFrequency = 0;
@@ -95,22 +100,24 @@ namespace TableDisco
         return dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
     }
 
-    void Visualization::visualizeData(unsigned char volumeBrightness, unsigned short dominantFrequency)
-    {       
+    Color VisualizationServer::getNewColor(unsigned char volumeBrightness, unsigned short dominantFrequency)
+    {    
+        Color newColor = { 0, 0, 0};   
         float volumeBrightnessFactor = (float)volumeBrightness / 255;
         if(dominantFrequency < MidFrequency)
         {
             unsigned short mappedRed = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Red, MidFreqColor.Red);
             unsigned short mappedGreen = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Green, MidFreqColor.Green);
             unsigned short mappedBlue = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Blue, MidFreqColor.Blue);
-            led.setColor({ mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor });
+            newColor = { mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor };
         }
         else
         {
             unsigned short mappedRed = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Red, HighFreqColor.Red);
             unsigned short mappedGreen = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Green, HighFreqColor.Green);
             unsigned short mappedBlue = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Blue, HighFreqColor.Blue);
-            led.setColor({ mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor });
+            newColor = { mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor };
         }
+        return newColor;
     }
 }
