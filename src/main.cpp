@@ -122,33 +122,34 @@ void handleReceivedText(String receivedText)
     if(receivedText.startsWith("set"))
     {
         // Handles the case: if connected after parent went into disco mode
-        if(!isRootDiscoMode && !isDiscoMode)
+        isRootDiscoMode = true;
+
+        if(isDiscoMode)
         {
-            isRootDiscoMode = true;
-            isDiscoMode = true;
-        }    
-        
-        String rgbText = receivedText.substring(4);
-        short delimiterPos = rgbText.indexOf(',');
+            String rgbText = receivedText.substring(4);
+            short delimiterPos = rgbText.indexOf(',');
 
-        TableDisco::Color newColor;
-        newColor.Red = rgbText.substring(0, delimiterPos).toInt();
+            TableDisco::Color newColor;
+            newColor.Red = rgbText.substring(0, delimiterPos).toInt();
 
-        rgbText = rgbText.substring(delimiterPos + 1);
-        delimiterPos = rgbText.indexOf(',');
-        newColor.Green = rgbText.substring(0, delimiterPos).toInt();
+            rgbText = rgbText.substring(delimiterPos + 1);
+            delimiterPos = rgbText.indexOf(',');
+            newColor.Green = rgbText.substring(0, delimiterPos).toInt();
 
-        rgbText = rgbText.substring(delimiterPos + 1);
-        delimiterPos = rgbText.indexOf(',');
-        newColor.Blue = rgbText.substring(0, delimiterPos).toInt();
-        
-        Serial.println(String(newColor.Red) + " " + String(newColor.Green) + " " + String(newColor.Blue));
-        led.setColor(newColor);
+            rgbText = rgbText.substring(delimiterPos + 1);
+            delimiterPos = rgbText.indexOf(',');
+            newColor.Blue = rgbText.substring(0, delimiterPos).toInt();
+            
+            Serial.println(String(newColor.Red) + " " + String(newColor.Green) + " " + String(newColor.Blue));
+            led.setColor(newColor);
+        }        
     }
     else if(receivedText == "disco")
     {
         isRootDiscoMode = !isRootDiscoMode;
-        isDiscoMode = !isDiscoMode;
-        led.blink(TableDisco::Cyan);
+        isDiscoMode = isRootDiscoMode;
+        
+        if(isDiscoMode) led.blink(TableDisco::Cyan);
+        else led.setColor(TableDisco::Ivory);
     }
 }
