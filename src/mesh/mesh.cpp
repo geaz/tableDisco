@@ -2,8 +2,6 @@
 
 namespace TableDisco
 {
-    Mesh::Mesh(LED& led) : led(led) { }
-
     void Mesh::setup()
     {
         WiFi.disconnect();
@@ -11,9 +9,9 @@ namespace TableDisco
         WiFi.setSleepMode(WIFI_NONE_SLEEP);
         
         Serial.println("Scanning for TableDiscos ...");
-        int foundNetworkCount = WiFi.scanNetworks();
-        int nearestTableDisco = -1;
-        int discoNr = 1;
+        unsigned char foundNetworkCount = WiFi.scanNetworks();
+        unsigned char discoNr = 1;
+        short nearestTableDisco = -1;
         for (int i = 0; i < foundNetworkCount; ++i)
         {
             if(WiFi.SSID(i).startsWith(SSID))
@@ -29,7 +27,6 @@ namespace TableDisco
 
         if(nearestTableDisco != -1) 
         {
-            led.blink(TableDisco::Yellow, 2);
             Serial.print("Connecting to '" + WiFi.SSID(nearestTableDisco) + "'");
             WiFi.begin(WiFi.SSID(nearestTableDisco), Password);     
             while (WiFi.status() != WL_CONNECTED)

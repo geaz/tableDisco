@@ -11,8 +11,8 @@ namespace TableDisco
         public:
             SocketServer();
             
-            void broadcast(String data);
             void loop();
+            void broadcast(String data);
         
         private:
             WebSocketsServer webSocket = WebSocketsServer(81);

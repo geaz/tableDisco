@@ -21,7 +21,6 @@ namespace TableDisco
                     break;
                 case WStype_CONNECTED:            
                     Serial.println("Connected to WebSocket!");
-                    TableDisco::SocketClientPointer->led.blink(TableDisco::Blue, 2);
                     break;
                 case WStype_TEXT:
                     TableDisco::SocketClientPointer->lastLoopReceivedText = String((char*)payload);

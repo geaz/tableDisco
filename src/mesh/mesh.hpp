@@ -4,7 +4,6 @@
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include "../led/led.hpp"
 
 namespace TableDisco
 {    
@@ -14,14 +13,11 @@ namespace TableDisco
     class Mesh 
     {
         public:
-            Mesh(LED& led);
-
             void setup();
             bool isRoot();
             IPAddress getParentIp();
 
         private:
-            LED& led;
             String ssid = SSID;
             IPAddress parentIp;
     };

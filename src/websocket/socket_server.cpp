@@ -7,13 +7,13 @@ namespace TableDisco
         webSocket.begin();
     }
 
-    void SocketServer::broadcast(String data)
-    {
-        webSocket.broadcastTXT(data);
-    }
-
     void SocketServer::loop()
     {
         webSocket.loop();
+    }
+
+    void SocketServer::broadcast(String data)
+    {
+        webSocket.broadcastTXT(data);
     }
 }

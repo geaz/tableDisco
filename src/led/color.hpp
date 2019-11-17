@@ -1,3 +1,9 @@
+#pragma once
+#ifndef COLOR_H
+#define COLOR_H
+
+#include <FastLED.h>
+
 namespace TableDisco
 {
     struct Color
@@ -5,6 +11,12 @@ namespace TableDisco
         unsigned char Red;
         unsigned char Green;
         unsigned char Blue;
+
+        Color getFaded(const char value) 
+        { 
+            CRGB fadedColor = CRGB(Red, Green, Blue).fadeToBlackBy(value);
+            return { fadedColor.r, fadedColor.g, fadedColor.b };  
+        }
 
         bool isBlack() { return Red == 0 && Green == 0 && Blue == 0; }
         bool operator!=(const Color other) { return other.Red != Red || other.Green != Green || other.Blue != Blue; }
@@ -18,3 +30,5 @@ namespace TableDisco
     static const Color Ivory = { 255, 255, 240 };
     static const Color Cyan = { 0, 255, 255 };
 }
+
+#endif // COLOR_H

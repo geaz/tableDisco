@@ -16,7 +16,6 @@ namespace TableDisco
         public:
             LED();
             
-            void fade(const char value);
             void blink(const Color color, const char times = 3);
             
             Color getColor() const;

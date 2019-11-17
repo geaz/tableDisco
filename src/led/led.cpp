@@ -28,13 +28,6 @@ namespace TableDisco
         setAllLeds(currentColor); 
     }
 
-    void LED::fade(const char value)
-    {
-        for(uint16_t index = 0; index < LedCount; index++)
-            leds[index].fadeToBlackBy(value);     
-        FastLED.show();
-    }
-
     void LED::blink(const Color blinkColor, const char times)
     {
         for(uint16_t blinkCount = 0; blinkCount < times; blinkCount++)
