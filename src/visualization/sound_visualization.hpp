@@ -1,10 +1,9 @@
 #pragma once
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#ifndef SOUNDVISUALIZATIONCLIENT_H
+#define SOUNDVISUALIZATIONCLIENT_H
 
 #include <deque>
 #include "../led/led.hpp"
-#include "../websocket/socket_server.hpp"
 
 namespace TableDisco
 {    
@@ -20,29 +19,24 @@ namespace TableDisco
     static const Color HighFreqColor = TableDisco::Red;
 
     // https://en.wikipedia.org/wiki/Audio_frequency
+    static const short MinFrequency = 130;  // Lowest note for viola, mandola - MinFrequency to trigger color change
     static const short MidFrequency = 1046; // Highest note reproducible by average female
-    static const short MaxFrequency = 2093; // Everything above will be full HighFreqColor
+    static const short MaxFrequency = 2093; // Highest note for a flute. - Everything above will be full HighFreqColor
 
-    class VisualizationServer
+    class SoundVisualization
     {
         public:
-            VisualizationServer(LED& led, SocketServer& socketServer);
-
-            void loop();
-            void toogleDiscoMode();
+            Color getSoundColor();
 
         private:
             double collectSamples();
             unsigned char getVolumeBrightness(const float sampleRMS) const;
             unsigned short getDominantFrequency();
-            Color getNewColor(unsigned char volumeBrightness, unsigned short dominantFrequency);
+            Color getNewSoundColor(unsigned char volumeBrightness, unsigned short dominantFrequency);
 
-            LED& led;
-            SocketServer& socketServer;
-            bool isDiscoMode = false;
             int16_t fftData[FFTDataSize];
             std::deque<double> lastRMSDeque;
     };
 }
 
-#endif // VISUALIZATION_H
+#endif // SOUNDVISUALIZATIONCLIENT_H

@@ -3,18 +3,23 @@
 #define SOCKETCLIENT_H
 
 #include <WebSocketsClient.h>
+#include "../led/led.hpp"
 
 namespace TableDisco
 {
     class SocketClient
     {
         public:
-            SocketClient();
+            SocketClient(LED& led);
 
             void start(String socketIp);
+            void loop();
+            String getReceivedText() const;
         
         private:
-            WebSocketsClient webSocket;;
+            LED& led;
+            WebSocketsClient webSocket;
+            String lastLoopReceivedText;
     };
 
     // SocketClient Pointer for Socket callbacks

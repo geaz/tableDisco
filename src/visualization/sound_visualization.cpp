@@ -1,50 +1,33 @@
 #include "Adafruit_ZeroFFT.h"
-#include "visualization_server.hpp"
+#include "sound_visualization.hpp"
 
 namespace TableDisco
 {
-    VisualizationServer::VisualizationServer(LED& led, SocketServer& socketServer) 
-        : led(led), socketServer(socketServer) { }
-
-    void VisualizationServer::loop()
+    Color SoundVisualization::getSoundColor()
     {
-        if(!isDiscoMode) return;
-        led.fade(64);
-
+        Color newSoundColor = {0, 0, 0};
         double sampleRMS = collectSamples();
-        if(sampleRMS > lastRMSDeque.front())
+        unsigned short dominantFrequency = getDominantFrequency();
+
+        if(sampleRMS > lastRMSDeque.front() && dominantFrequency >= MinFrequency)
         {
             unsigned char volumeBrightness = getVolumeBrightness(sampleRMS);
-            unsigned short dominantFrequency = getDominantFrequency();
-            Color color = getNewColor(volumeBrightness, dominantFrequency);
-            
-            socketServer.broadcast(String(color.Red) + "," + String(color.Green) + "," + String(color.Blue));
-            led.setColor(color);
+            newSoundColor = getNewSoundColor(volumeBrightness, dominantFrequency);
 
             Serial.print("Sample RMS: " + String(sampleRMS));
+            Serial.print("| Last Sample RMS: " + String(lastRMSDeque.front()));
             Serial.print("| New Brightness: " + String(volumeBrightness));
             Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
-            Serial.print("| New Color: " + String(color.Red) + " " + String(color.Green) + " " + String(color.Blue));
+            Serial.print("| New Color: " + String(newSoundColor.Red) + " " + String(newSoundColor.Green) + " " + String(newSoundColor.Blue));
             Serial.println("");
         }        
         lastRMSDeque.push_front(sampleRMS);
-        if(lastRMSDeque.size() > MaxRMSCount) lastRMSDeque.pop_back();      
+        if(lastRMSDeque.size() > MaxRMSCount) lastRMSDeque.pop_back();
 
-        delay(30); 
+        return newSoundColor;
     }
 
-    void VisualizationServer::toogleDiscoMode()
-    {
-        isDiscoMode = !isDiscoMode;
-        if(!isDiscoMode) led.setColor(TableDisco::Ivory);
-        else 
-        {
-            led.blink(TableDisco::Cyan);
-            led.setColor(TableDisco::Cyan);
-        }
-    }
-
-    double VisualizationServer::collectSamples()
+    double SoundVisualization::collectSamples()
     {
         unsigned short signalMax = 0;
         unsigned short signalMin = 1024;
@@ -69,7 +52,7 @@ namespace TableDisco
         return sampleRMS;
     }
 
-    unsigned char VisualizationServer::getVolumeBrightness(const float sampleRMS) const
+    unsigned char SoundVisualization::getVolumeBrightness(const float sampleRMS) const
     {
         double minRMS = sampleRMS;
         double maxRMS = sampleRMS;
@@ -82,7 +65,7 @@ namespace TableDisco
         return map(sampleRMS, minRMS, maxRMS, 0, 255);
     }
 
-    unsigned short VisualizationServer::getDominantFrequency() 
+    unsigned short SoundVisualization::getDominantFrequency() 
     {
         ZeroFFT(fftData, FFTDataSize);
         unsigned short dominantFrequency = 0;
@@ -100,7 +83,7 @@ namespace TableDisco
         return dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
     }
 
-    Color VisualizationServer::getNewColor(unsigned char volumeBrightness, unsigned short dominantFrequency)
+    Color SoundVisualization::getNewSoundColor(unsigned char volumeBrightness, unsigned short dominantFrequency)
     {    
         Color newColor = { 0, 0, 0};   
         float volumeBrightnessFactor = (float)volumeBrightness / 255;

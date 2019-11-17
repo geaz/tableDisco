@@ -18,11 +18,12 @@ namespace TableDisco
 
             void setup();
             bool isRoot();
-            String getParentIp();
+            IPAddress getParentIp();
 
         private:
             LED& led;
             String ssid = SSID;
+            IPAddress parentIp;
     };
 }
 

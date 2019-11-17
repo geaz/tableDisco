@@ -4,7 +4,7 @@ namespace TableDisco
 {
     SocketClient* SocketClientPointer = NULL;
 
-    SocketClient::SocketClient()
+    SocketClient::SocketClient(LED& led) : led(led)
     {
         TableDisco::SocketClientPointer = this;
     }
@@ -13,22 +13,38 @@ namespace TableDisco
     {        
         auto webSocketEvent = [](WStype_t type, uint8_t * payload, size_t length) 
         {
-            switch(type) {
-                case WStype_DISCONNECTED:
-                    Serial.printf("[WSC] Disconnected!\n");
+            switch(type) 
+            {
+                case WStype_DISCONNECTED:              
+                    Serial.println("Disconnected from WebSocket!");  
+                    TableDisco::SocketClientPointer->led.blink(TableDisco::Red, 5);
                     break;
-                case WStype_CONNECTED:
-                    Serial.printf("[WSC] Connected to url: %s\n", payload);
+                case WStype_CONNECTED:            
+                    Serial.println("Connected to WebSocket!");
+                    TableDisco::SocketClientPointer->led.blink(TableDisco::Blue, 2);
                     break;
                 case WStype_TEXT:
-                    Serial.printf("[WSC] get text: %s\n", payload);
+                    String receivedText = String((char*)payload);
+                    TableDisco::SocketClientPointer->lastLoopReceivedText = receivedText;
                     break;
             }
         };
 
+        Serial.println("Connecting to socket '" + socketIp + "' ...");
         webSocket.begin(socketIp, 81, "/");
         webSocket.onEvent(webSocketEvent);
-        webSocket.setReconnectInterval(5000);
-        webSocket.enableHeartbeat(15000, 3000, 2);
+        //webSocket.setReconnectInterval(5000);
+       // webSocket.enableHeartbeat(15000, 3000, 2);
+    }
+
+    void SocketClient::loop()
+    {
+        lastLoopReceivedText = String("");
+        webSocket.loop();
+    }
+    
+    String SocketClient::getReceivedText() const
+    {
+        return lastLoopReceivedText;
     }
 }
