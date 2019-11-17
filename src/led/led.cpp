@@ -12,12 +12,6 @@ namespace TableDisco
             .setCorrection(TypicalLEDStrip);
     }
 
-    void LED::setColor(const Color newColor)
-    {
-        currentColor = newColor;
-        setAllLeds(currentColor); 
-    }
-
     Color LED::getColor() const
     {
         Color currentColor;
@@ -26,6 +20,12 @@ namespace TableDisco
         currentColor.Blue = leds[0].b;
         
         return currentColor; 
+    }
+
+    void LED::setColor(const Color newColor)
+    {
+        currentColor = newColor;
+        setAllLeds(currentColor); 
     }
 
     void LED::fade(const char value)
