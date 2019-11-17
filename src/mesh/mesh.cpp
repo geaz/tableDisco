@@ -6,9 +6,9 @@ namespace TableDisco
 
     void Mesh::setup()
     {
-        WiFi.mode(WIFI_STA);
         WiFi.disconnect();
-        delay(100);
+        WiFi.mode(WIFI_AP_STA);
+        WiFi.setSleepMode(WIFI_NONE_SLEEP);
         
         Serial.println("Scanning for TableDiscos ...");
         int foundNetworkCount = WiFi.scanNetworks();
@@ -27,7 +27,6 @@ namespace TableDisco
             }
         }
 
-        WiFi.mode(WIFI_AP_STA);
         if(nearestTableDisco != -1) 
         {
             led.blink(TableDisco::Yellow, 2);
@@ -51,8 +50,6 @@ namespace TableDisco
 
         Serial.println("Disco AP IP: " + WiFi.softAPIP().toString());
         Serial.println("Disco Local IP: " + WiFi.localIP().toString());                
-        Serial.println("Lets Party!");
-        led.blink(TableDisco::Green);
     }
 
     bool Mesh::isRoot() 

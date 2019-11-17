@@ -12,6 +12,9 @@ namespace TableDisco
         unsigned char Red;
         unsigned char Green;
         unsigned char Blue;
+
+        bool isBlack() { return Red == 0 && Green == 0 && Blue == 0; }
+        bool operator!=(const Color other) { return other.Red != Red || other.Green != Green || other.Blue != Blue; }
     };
     
     static const char LedCount = 4;
@@ -31,6 +34,7 @@ namespace TableDisco
             LED();
 
             void setColor(Color color);
+            Color getColor() const;
             void fade(const char value);
             void blink(const Color color, const char times = 3);
 

@@ -2,11 +2,8 @@
 
 namespace TableDisco
 {
-    SocketServer* SocketServerPointer = NULL;
-
     SocketServer::SocketServer()
     {
-        TableDisco::SocketServerPointer = this;
         webSocket.begin();
     }
 

@@ -7,9 +7,6 @@
 #include "websocket/socket_client.hpp"
 #include "visualization/sound_visualization.hpp"
 
-// Activate ASYNC Websockets - With SYNC Websockets -> Frequent Disconnects
-#define WEBSOCKETS_NETWORK_TYPE NETWORK_ESP8266_ASYNC
-
 TableDisco::LED led;
 TableDisco::Mesh mesh(led);
 TableDisco::SocketServer socketServer;
@@ -19,6 +16,9 @@ TableDisco::SoundVisualization soundVisualzation;
 bool isRootDiscoMode = false;
 bool isDiscoMode = false;
 char lastButtonVal = LOW;
+
+TableDisco::Color lastColor;
+unsigned long lastColorUpdate = 0;
 
 // Check, if the switch mode button was pressed
 void checkModeButton()
@@ -99,6 +99,7 @@ void setup()
         Serial.println("Starting as client ...");
         socketClient.start(mesh.getParentIp().toString());
     }
+    led.blink(TableDisco::Green);
 }
 
 void loop() 
@@ -109,24 +110,30 @@ void loop()
     // & WebSocket connections
     socketServer.loop();
 
-    if(isDiscoMode) 
+    // If in DiscoMode, add a delay of 50ms (Lower would be possible too maybe). Otherwise the WiFi connection will be unstable!
+    if(mesh.isRoot() && isDiscoMode && lastColorUpdate + 50 < millis())
     {
-        //led.fade(64);
-        if(mesh.isRoot())
+        // Fading done by server to overcome timing issues by processing heavy server work and light weight client work (client will loop faster which results in faster fading)
+        led.fade(64);
+        
+        TableDisco::Color newColor = soundVisualzation.getSoundColor();
+        newColor = newColor.isBlack()
+            ? led.getColor()
+            : newColor;
+
+        if(newColor != lastColor)
         {
-            TableDisco::Color newColor = soundVisualzation.getSoundColor();
-            if(newColor.Red != 0 || newColor.Green != 0 || newColor.Blue != 0)
-            {
-                // After getting a new color we want to broadcast it directly to 
-                // all mesh nodes, before setting the leds (for better timing)
-                socketServer.broadcast("set " + String(newColor.Red) + "," + String(newColor.Green) + "," + String(newColor.Blue));
-                socketServer.loop();
-                led.setColor(newColor);
-            }        
+            // After getting a new color we want to broadcast it directly to 
+            // all mesh nodes, before setting the leds (for better timing)
+            socketServer.broadcast("set " + String(newColor.Red) + "," + String(newColor.Green) + "," + String(newColor.Blue));
+            socketServer.loop();
+            led.setColor(newColor);
+
+            lastColor = newColor;
         }
+        lastColorUpdate = millis();
     }        
-    
-    if(!mesh.isRoot()) 
+    else if(!mesh.isRoot()) 
     {
         socketClient.loop();
         String receivedText = socketClient.getReceivedText();

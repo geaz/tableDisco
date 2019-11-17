@@ -18,6 +18,16 @@ namespace TableDisco
         setAllLeds(currentColor); 
     }
 
+    Color LED::getColor() const
+    {
+        Color currentColor;
+        currentColor.Red = leds[0].r;
+        currentColor.Green = leds[0].g;
+        currentColor.Blue = leds[0].b;
+        
+        return currentColor; 
+    }
+
     void LED::fade(const char value)
     {
         for(uint16_t index = 0; index < LedCount; index++)

@@ -17,9 +17,6 @@ namespace TableDisco
         private:
             WebSocketsServer webSocket = WebSocketsServer(81);
     };
-
-    // SocketServer Pointer for Socket callbacks
-    extern SocketServer* SocketServerPointer;
 }
 
 #endif // SOCKETSERVER_H

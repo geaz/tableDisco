@@ -33,8 +33,8 @@ namespace TableDisco
         Serial.println("Connecting to socket '" + socketIp + "' ...");
         webSocket.begin(socketIp, 81, "/");
         webSocket.onEvent(webSocketEvent);
-        //webSocket.setReconnectInterval(5000);
-       // webSocket.enableHeartbeat(15000, 3000, 2);
+        webSocket.setReconnectInterval(5000);
+        webSocket.enableHeartbeat(15000, 3000, 2);
     }
 
     void SocketClient::loop()
