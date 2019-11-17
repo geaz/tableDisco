@@ -14,6 +14,7 @@ namespace TableDisco
 
             void start(String socketIp);
             void loop();
+            
             String getReceivedText() const;
         
         private:

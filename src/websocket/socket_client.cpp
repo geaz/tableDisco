@@ -24,8 +24,10 @@ namespace TableDisco
                     TableDisco::SocketClientPointer->led.blink(TableDisco::Blue, 2);
                     break;
                 case WStype_TEXT:
-                    String receivedText = String((char*)payload);
-                    TableDisco::SocketClientPointer->lastLoopReceivedText = receivedText;
+                    TableDisco::SocketClientPointer->lastLoopReceivedText = String((char*)payload);
+                    break;
+                default:
+                    // Not interested in other cases
                     break;
             }
         };
