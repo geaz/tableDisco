@@ -1,0 +1,47 @@
+( { EESchema Netlist Version 1.1 created  08.03.2020 07:56:20 }
+ ( /5E63D8B8 Module:WEMOS_D1_mini_light  U1 WeMos_D1_mini
+  (    1 ? )
+  (    2 Net-(J1-Pad2) )
+  (    3 ? )
+  (    4 ? )
+  (    5 ? )
+  (    6 ? )
+  (    7 ? )
+  (    8 /VCC )
+  (    9 ? )
+  (   10 /Ground )
+  (   11 ? )
+  (   12 Net-(J2-Pad2) )
+  (   13 Net-(J3-Pad2) )
+  (   14 ? )
+  (   15 ? )
+  (   16 ? )
+ )
+ ( /5E64B664 Connector_Wire:SolderWirePad_1x02_P3.81mm_Drill0.8mm  J5 Power_Connection
+  (    1 /VCC )
+  (    2 /Ground )
+ )
+ ( /5E64FB5C Connector_Wire:SolderWirePad_1x02_P3.81mm_Drill0.8mm  J3 Mode_Switch
+  (    1 /VCC )
+  (    2 Net-(J3-Pad2) )
+ )
+ ( /5E650CB8 Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal  R1 R
+  (    1 Net-(J3-Pad2) )
+  (    2 /Ground )
+ )
+ ( /5E641D60 Connector_Wire:SolderWirePad_1x03_P3.81mm_Drill1.2mm  J2 LED_Connection
+  (    1 /VCC )
+  (    2 Net-(J2-Pad2) )
+  (    3 /Ground )
+ )
+ ( /5E640D45 Connector_Wire:SolderWirePad_1x03_P3.81mm_Drill1.2mm  J1 Mic_Connection
+  (    1 /VCC )
+  (    2 Net-(J1-Pad2) )
+  (    3 /Ground )
+ )
+ ( /5E65FE79 Capacitor_THT:CP_Radial_D6.3mm_P2.50mm  C1 CP470uF
+  (    1 /VCC )
+  (    2 /Ground )
+ )
+)
+*
