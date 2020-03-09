@@ -18,7 +18,7 @@ bool isRootDiscoMode = false;
 char lastButtonVal = LOW;
 
 TableDisco::Color lastColor;
-unsigned long lastColorUpdate = 0;
+unsigned long lastColorUpdate, lastButtonUpdate = 0;
 
 void checkModeButton();
 void handleReceivedText(String receivedText);
@@ -82,15 +82,22 @@ void loop()
     {
         socketClient.loop();
         String receivedText = socketClient.getReceivedText();
-        socketServer.broadcast(receivedText);
+        if(receivedText != "")
+        {
+            socketServer.broadcast(receivedText);
+            handleReceivedText(receivedText);
+        }        
         socketServer.loop();
-        handleReceivedText(receivedText);
     }
 }
 
 // Check, if the switch mode button was pressed
 void checkModeButton()
 {
+    // Only check the button every 100 millis
+    // this was necessary because of the button type I was using in my build
+    if(lastButtonUpdate + 100 > millis()) return;
+
     char buttonVal = digitalRead(D2);
     if(buttonVal == HIGH && lastButtonVal == LOW && mesh.isRoot())
     {
@@ -115,6 +122,7 @@ void checkModeButton()
         else led.setColor(TableDisco::Ivory);
     }
     lastButtonVal = buttonVal;
+    lastButtonUpdate = millis();
 }
 
 void handleReceivedText(String receivedText)

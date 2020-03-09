@@ -17,10 +17,11 @@ namespace TableDisco
             {
                 case WStype_DISCONNECTED:              
                     Serial.println("Disconnected from WebSocket!");  
-                    TableDisco::SocketClientPointer->led.blink(TableDisco::Red, 5);
+                    TableDisco::SocketClientPointer->led.blink(TableDisco::Red, 3);
                     break;
                 case WStype_CONNECTED:            
                     Serial.println("Connected to WebSocket!");
+                    TableDisco::SocketClientPointer->led.blink(TableDisco::Green, 1);
                     break;
                 case WStype_TEXT:
                     TableDisco::SocketClientPointer->lastLoopReceivedText = String((char*)payload);
@@ -35,7 +36,6 @@ namespace TableDisco
         webSocket.begin(socketIp, 81, "/");
         webSocket.onEvent(webSocketEvent);
         webSocket.setReconnectInterval(5000);
-        webSocket.enableHeartbeat(15000, 3000, 2);
     }
 
     void SocketClient::loop()

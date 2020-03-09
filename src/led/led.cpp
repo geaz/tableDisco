@@ -33,10 +33,10 @@ namespace TableDisco
         for(uint16_t blinkCount = 0; blinkCount < times; blinkCount++)
         {        
             setAllLeds(blinkColor);      
-            delay(500);
+            delay(200);
 
             setAllLeds(TableDisco::Black);    
-            delay(500);
+            delay(200);
         }
         setAllLeds(currentColor);
     }
