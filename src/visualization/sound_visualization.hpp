@@ -20,8 +20,8 @@ namespace TableDisco
 
     // https://en.wikipedia.org/wiki/Audio_frequency
     static const short MinFrequency = 130;  // Lowest note for viola, mandola - MinFrequency to trigger color change
-    static const short MidFrequency = 1046; // Highest note reproducible by average female
-    static const short MaxFrequency = 3140; // Between highest note on a flute and on a 88-key piano - Everything above will be full HighFreqColor
+    static const short MidFrequency = 720; // 1046 Highest note reproducible by average female
+    static const short MaxFrequency = 2100; // 3140 Between highest note on a flute and on a 88-key piano - Everything above will be full HighFreqColor
 
     class SoundVisualization
     {
