@@ -5,7 +5,7 @@ namespace TableDisco
     SocketServer::SocketServer()
     {
         webSocket.begin();
-        webSocket.enableHeartbeat(1000, 500, 1);
+        webSocket.enableHeartbeat(2000, 1500, 1);
     }
 
     void SocketServer::loop()

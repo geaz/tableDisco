@@ -13,6 +13,7 @@ TableDisco::SocketServer socketServer;
 TableDisco::SocketClient socketClient(led);
 TableDisco::SoundVisualization soundVisualzation;
 
+bool userSwitched = false;
 bool isDiscoMode = false;
 bool isRootDiscoMode = false;
 char lastButtonVal = LOW;
@@ -105,7 +106,11 @@ void checkModeButton()
         isDiscoMode = !isDiscoMode;
         socketServer.broadcast("disco");
 
-        if(isDiscoMode) led.blink(TableDisco::Cyan);
+        if(isDiscoMode)
+        {
+            led.blink(TableDisco::Cyan);
+            led.blink(TableDisco::Black);
+        }
         else led.setColor(TableDisco::Ivory);
     }
     else if(buttonVal == HIGH && lastButtonVal == LOW)
@@ -118,7 +123,17 @@ void checkModeButton()
         isDiscoMode = isRootDiscoMode
             ? !isDiscoMode
             : isRootDiscoMode;
-        if(isDiscoMode) led.blink(TableDisco::Cyan);
+            
+        // the user switched variable gets set the first time
+        // the 'child' table disco gets switched back to 'normal' mode.
+        // This is necessary to auto switch new disco modes (see handleReceivedText method)
+        userSwitched = true;
+
+        if(isDiscoMode) 
+        {
+            led.blink(TableDisco::Cyan);
+            led.blink(TableDisco::Black);
+        }
         else led.setColor(TableDisco::Ivory);
     }
     lastButtonVal = buttonVal;
@@ -131,6 +146,7 @@ void handleReceivedText(String receivedText)
     {
         // Handles the case: if connected after parent went into disco mode
         isRootDiscoMode = true;
+        if(!userSwitched) isDiscoMode = true;
 
         if(isDiscoMode)
         {
@@ -157,7 +173,11 @@ void handleReceivedText(String receivedText)
         isRootDiscoMode = !isRootDiscoMode;
         isDiscoMode = isRootDiscoMode;
         
-        if(isDiscoMode) led.blink(TableDisco::Cyan);
+        if(isDiscoMode)
+        {
+            led.blink(TableDisco::Cyan);
+            led.blink(TableDisco::Black);
+        }
         else led.setColor(TableDisco::Ivory);
     }
 }
