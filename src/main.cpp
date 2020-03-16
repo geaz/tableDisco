@@ -1,95 +1,39 @@
 #include <Arduino.h>
-#include <FastLED.h>
+#include <ESP8266HTTPUpdateServer.h>
+#include "disco/disco.hpp"
 
-#include "led/led.hpp"
-#include "mesh/mesh.hpp"
-#include "websocket/socket_server.hpp"
-#include "websocket/socket_client.hpp"
-#include "visualization/sound_visualization.hpp"
+ESP8266WebServer httpServer(80);
+ESP8266HTTPUpdateServer httpUpdater;
 
-TableDisco::LED led;
-TableDisco::Mesh mesh;
-TableDisco::SocketServer socketServer;
-TableDisco::SocketClient socketClient(led);
-TableDisco::SoundVisualization soundVisualzation;
-
-bool userSwitched = false;
-bool isDiscoMode = false;
-bool isRootDiscoMode = false;
+TableDisco::Disco disco;
 char lastButtonVal = LOW;
-
-TableDisco::Color lastColor;
-unsigned long lastColorUpdate, lastButtonUpdate = 0;
+unsigned long lastButtonUpdate = 0;
 
 void checkModeButton();
-void handleReceivedText(String receivedText);
 
 void setup() 
 {
     Serial.begin(9600);
     Serial.println("Starting TableDisco ...");
-    pinMode(A0, INPUT); 
-    pinMode(D2, INPUT); 
-    pinMode(D3, OUTPUT); 
+    pinMode(A0, INPUT);     // Mic Input
+    pinMode(D2, INPUT);     // Switch Mode Button
+    pinMode(D3, OUTPUT);    // LED Data
 
-    led.setColor(TableDisco::Ivory);
-    mesh.setup();
-    if(!mesh.isRoot())
-    {
-        Serial.println("Starting as client ...");
-        socketClient.start(mesh.getParentIp().toString());
-        led.blink(TableDisco::Blue);
-    }
-    else 
-    {
-        Serial.println("Starting as server ...");        
-        led.blink(TableDisco::Green);
-    }
+    // Setting up Disco
+    disco.setup();
+
+    // Setting up Update Server
+    httpUpdater.setup(&httpServer);
+    httpServer.begin();
 }
 
 void loop() 
 {    
+    // Handle Update Server
+    httpServer.handleClient();
+    // Handle Table Disco
     checkModeButton();
-
-    // Handle button press commands & WebSocket connections
-    socketServer.loop();
-
-    // If in DiscoMode, add a delay of 50ms (Lower would be possible too maybe). Otherwise the WiFi connection will be unstable!
-    if(mesh.isRoot() && isDiscoMode && lastColorUpdate + 50 < millis())
-    {
-        // Fading done by server to overcome timing issues, because of heavy server work and light weight client work. 
-        // If the client handles the fading by itself, it will loop faster which results in faster fading.
-        // By communicating every color change over the websocket the server and the clients will stay in sync.
-        TableDisco::Color currentFaded = led.getColor().getFaded(64);
-        
-        TableDisco::Color newColor = soundVisualzation.getSoundColor();
-        newColor = newColor.isBlack()
-            ? currentFaded
-            : newColor;
-
-        if(newColor != lastColor)
-        {
-            // After getting a new color we want to broadcast it directly to 
-            // all mesh nodes, before setting the leds (for better timing)
-            socketServer.broadcast("set " + String(newColor.Red) + "," + String(newColor.Green) + "," + String(newColor.Blue));
-            socketServer.loop();
-            led.setColor(newColor);
-
-            lastColor = newColor;
-        }
-        lastColorUpdate = millis();
-    }        
-    else if(!mesh.isRoot()) 
-    {
-        socketClient.loop();
-        String receivedText = socketClient.getReceivedText();
-        if(receivedText != "")
-        {
-            socketServer.broadcast(receivedText);
-            handleReceivedText(receivedText);
-        }        
-        socketServer.loop();
-    }
+    disco.loop();
 }
 
 // Check, if the switch mode button was pressed
@@ -100,84 +44,10 @@ void checkModeButton()
     if(lastButtonUpdate + 100 > millis()) return;
 
     char buttonVal = digitalRead(D2);
-    if(buttonVal == HIGH && lastButtonVal == LOW && mesh.isRoot())
+    if(buttonVal == HIGH && lastButtonVal == LOW)
     {
-        isRootDiscoMode = !isRootDiscoMode;
-        isDiscoMode = !isDiscoMode;
-        socketServer.broadcast("disco");
-
-        if(isDiscoMode)
-        {
-            led.blink(TableDisco::Cyan);
-            led.blink(TableDisco::Black);
-        }
-        else led.setColor(TableDisco::Ivory);
-    }
-    else if(buttonVal == HIGH && lastButtonVal == LOW)
-    {
-        // A 'child' table disco is only allowed
-        // to switch its mode, if the root table disco
-        // is in disco mode. This way a table is able to
-        // switch back to 'normal' mode, but not to switch to 
-        // 'Disco Mode', if the root is not set to 'disco mode'.
-        isDiscoMode = isRootDiscoMode
-            ? !isDiscoMode
-            : isRootDiscoMode;
-            
-        // the user switched variable gets set the first time
-        // the 'child' table disco gets switched back to 'normal' mode.
-        // This is necessary to auto switch new disco modes (see handleReceivedText method)
-        userSwitched = true;
-
-        if(isDiscoMode) 
-        {
-            led.blink(TableDisco::Cyan);
-            led.blink(TableDisco::Black);
-        }
-        else led.setColor(TableDisco::Ivory);
+        disco.switchMode();
     }
     lastButtonVal = buttonVal;
     lastButtonUpdate = millis();
-}
-
-void handleReceivedText(String receivedText)
-{
-    if(receivedText.startsWith("set"))
-    {
-        // Handles the case: if connected after parent went into disco mode
-        isRootDiscoMode = true;
-        if(!userSwitched) isDiscoMode = true;
-
-        if(isDiscoMode)
-        {
-            String rgbText = receivedText.substring(4);
-            short delimiterPos = rgbText.indexOf(',');
-
-            TableDisco::Color newColor;
-            newColor.Red = rgbText.substring(0, delimiterPos).toInt();
-
-            rgbText = rgbText.substring(delimiterPos + 1);
-            delimiterPos = rgbText.indexOf(',');
-            newColor.Green = rgbText.substring(0, delimiterPos).toInt();
-
-            rgbText = rgbText.substring(delimiterPos + 1);
-            delimiterPos = rgbText.indexOf(',');
-            newColor.Blue = rgbText.substring(0, delimiterPos).toInt();
-            
-            Serial.println(String(newColor.Red) + " " + String(newColor.Green) + " " + String(newColor.Blue));
-            led.setColor(newColor);
-        }        
-    }
-    else if(receivedText == "disco")
-    {
-        isRootDiscoMode = !isRootDiscoMode;
-        isDiscoMode = isRootDiscoMode;
-        
-        if(isDiscoMode)
-        {
-            led.blink(TableDisco::Cyan);
-            led.blink(TableDisco::Black);
-        }
-        else led.setColor(TableDisco::Ivory);
-    }
 }
