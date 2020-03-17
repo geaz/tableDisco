@@ -10,6 +10,7 @@ namespace TableDisco
         FastLED
             .addLeds<WS2812B, DataPin, GRB>(&leds[0], LedCount)
             .setCorrection(TypicalLEDStrip);
+        FastLED.setTemperature(Candle);
     }
 
     Color LED::getColor() const

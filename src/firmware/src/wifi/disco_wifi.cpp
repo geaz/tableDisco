@@ -1,13 +1,52 @@
-#include "mesh.hpp"
+#include "disco_wifi.hpp"
 
 namespace TableDisco
 {
-    void Mesh::setup()
+    DiscoWifi::DiscoWifi()
     {
         WiFi.disconnect();
         WiFi.mode(WIFI_AP_STA);
         WiFi.setSleepMode(WIFI_NONE_SLEEP);
-        
+    }
+
+    bool DiscoWifi::isUpdaterAvailable()
+    {
+        bool isAvailable = false;
+        unsigned char foundNetworkCount = WiFi.scanNetworks();
+        for (int i = 0; i < foundNetworkCount; ++i)
+        {
+            if(WiFi.SSID(i).equals("Table Disco Updater"))
+            {
+                isAvailable = true;
+                break;
+            }
+        }
+        return isAvailable;
+    }
+
+    void DiscoWifi::connectToUpdater()
+    {
+        unsigned char foundNetworkCount = WiFi.scanNetworks();
+        unsigned char updaterId = -1;
+        for (int i = 0; i < foundNetworkCount; ++i)
+        {
+            if(WiFi.SSID(i).equals(UpdaterSSID))
+            {
+                updaterId = i;
+                break;
+            }
+        }
+
+        WiFi.begin(WiFi.SSID(updaterId), UpdaterPassword);    
+        while (WiFi.status() != WL_CONNECTED)
+        {
+            delay(500);
+            Serial.print(".");
+        }  
+    }
+
+    void DiscoWifi::startMesh()
+    {
         Serial.println("Scanning for TableDiscos ...");
         unsigned char foundNetworkCount = WiFi.scanNetworks();
         unsigned char discoNr = 1;
@@ -46,15 +85,15 @@ namespace TableDisco
         WiFi.softAP(ssid, Password, 1, false, 8);
 
         Serial.println("Disco AP IP: " + WiFi.softAPIP().toString());
-        Serial.println("Disco Local IP: " + WiFi.localIP().toString());                
+        Serial.println("Disco Local IP: " + WiFi.localIP().toString());
     }
 
-    bool Mesh::isRoot() 
+    bool DiscoWifi::isRootNode() 
     { 
         return ssid.endsWith(" #1"); 
     }
 
-    IPAddress Mesh::getParentIp()
+    IPAddress DiscoWifi::getParentIp()
     {
         return parentIp;
     }

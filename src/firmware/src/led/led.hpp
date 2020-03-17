@@ -25,7 +25,7 @@ namespace TableDisco
             void setAllLeds(Color color);
 
             std::vector<CRGB> leds;
-            Color currentColor = TableDisco::Ivory;
+            Color currentColor = TableDisco::White;
     };
 }
 

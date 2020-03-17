@@ -2,7 +2,7 @@
 #define TABLEDISCO_H
 
 #include "../led/led.hpp"
-#include "../mesh/mesh.hpp"
+#include "../wifi/disco_wifi.hpp"
 #include "../websocket/socket_server.hpp"
 #include "../websocket/socket_client.hpp"
 #include "../visualization/sound_visualization.hpp"
@@ -12,6 +12,8 @@ namespace TableDisco
     class Disco 
     {
         public:
+            Disco(LED& led, DiscoWifi& wifi);
+
             void setup();
             void loop();
             void switchMode();
@@ -19,19 +21,18 @@ namespace TableDisco
         private:            
             void handleReceivedText(String receivedText);
 
-            LED led;
-            Mesh mesh;
+            LED& led;
+            DiscoWifi& wifi;
             SocketServer socketServer;
-            SocketClient socketClient = SocketClient(led);
+            SocketClient socketClient;
             SoundVisualization soundVisualzation;
 
             bool userSwitched = false;
             bool isDiscoMode = false;
             bool isRootDiscoMode = false;
-            char lastButtonVal = LOW;
 
             Color lastColor;
-            unsigned long lastColorUpdate, lastButtonUpdate = 0;
+            unsigned long lastColorUpdate = 0;
     };
 }
 

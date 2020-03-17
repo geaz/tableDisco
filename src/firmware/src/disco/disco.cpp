@@ -2,14 +2,20 @@
 
 namespace TableDisco
 {
+    Disco::Disco(LED& led, DiscoWifi& wifi) : 
+        led(led), 
+        wifi(wifi), 
+        socketClient(SocketClient(led))
+    {
+        led.setColor(TableDisco::White);
+    }
+
     void Disco::setup()
     {
-        led.setColor(TableDisco::Ivory);
-        mesh.setup();
-        if(!mesh.isRoot())
+        if(!wifi.isRootNode())
         {
             Serial.println("Starting as client ...");
-            socketClient.start(mesh.getParentIp().toString());
+            socketClient.start(wifi.getParentIp().toString());
             led.blink(TableDisco::Blue);
         }
         else 
@@ -25,7 +31,7 @@ namespace TableDisco
         socketServer.loop();
 
         // If in DiscoMode, add a delay of 50ms (Lower would be possible too maybe). Otherwise the WiFi connection will be unstable!
-        if(mesh.isRoot() && isDiscoMode && lastColorUpdate + 50 < millis())
+        if(wifi.isRootNode() && isDiscoMode && lastColorUpdate + 50 < millis())
         {
             // Fading done by server to overcome timing issues, because of heavy server work and light weight client work. 
             // If the client handles the fading by itself, it will loop faster which results in faster fading.
@@ -49,7 +55,7 @@ namespace TableDisco
             }
             lastColorUpdate = millis();
         }        
-        else if(!mesh.isRoot()) 
+        else if(!wifi.isRootNode()) 
         {
             socketClient.loop();
             String receivedText = socketClient.getReceivedText();
@@ -64,7 +70,7 @@ namespace TableDisco
 
     void Disco::switchMode()
     {
-        if(mesh.isRoot())
+        if(wifi.isRootNode())
         {
             isRootDiscoMode = !isRootDiscoMode;
             isDiscoMode = !isDiscoMode;
@@ -75,7 +81,7 @@ namespace TableDisco
                 led.blink(TableDisco::Cyan);
                 led.setColor(TableDisco::Black);
             }
-            else led.setColor(TableDisco::Ivory);
+            else led.setColor(TableDisco::White);
         }
         else
         {
@@ -98,7 +104,7 @@ namespace TableDisco
                 led.blink(TableDisco::Cyan);
                 led.setColor(TableDisco::Black);
             }
-            else led.setColor(TableDisco::Ivory);
+            else led.setColor(TableDisco::White);
         }
     }
 
@@ -140,7 +146,7 @@ namespace TableDisco
                 led.blink(TableDisco::Cyan);
                 led.setColor(TableDisco::Black);
             }
-            else led.setColor(TableDisco::Ivory);
+            else led.setColor(TableDisco::White);
         }
     }
 }
