@@ -27,12 +27,12 @@ $EndComp
 $Comp
 L Connector_Generic:Conn_01x02 J5
 U 1 1 5E64B664
-P 3450 3350
-F 0 "J5" H 3530 3342 50  0000 L CNN
-F 1 "Power Connection" H 3530 3251 50  0000 L CNN
-F 2 "Connector_Wire:SolderWirePad_1x02_P3.81mm_Drill0.8mm" H 3450 3350 50  0001 C CNN
-F 3 "~" H 3450 3350 50  0001 C CNN
-	1    3450 3350
+P 3450 2950
+F 0 "J5" H 3530 2942 50  0000 L CNN
+F 1 "Power Connection" H 3530 2851 50  0000 L CNN
+F 2 "Connector_Wire:SolderWirePad_1x02_P3.81mm_Drill0.8mm" H 3450 2950 50  0001 C CNN
+F 3 "~" H 3450 2950 50  0001 C CNN
+	1    3450 2950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -70,29 +70,12 @@ F 3 "~" H 3450 2400 50  0001 C CNN
 	1    3450 2400
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x02 J4
-U 1 1 5E6451DD
-P 3450 3000
-F 0 "J4" H 3530 2992 50  0000 L CNN
-F 1 "Power Switch" H 3530 2901 50  0000 L CNN
-F 2 "Connector_Wire:SolderWirePad_1x02_P3.81mm_Drill0.8mm" H 3450 3000 50  0001 C CNN
-F 3 "~" H 3450 3000 50  0001 C CNN
-	1    3450 3000
-	1    0    0    -1  
-$EndComp
 Text Label 2250 3350 0    50   ~ 0
 Ground
-Text Label 3000 3450 0    50   ~ 0
+Text Label 3000 3050 0    50   ~ 0
 Ground
 Wire Wire Line
-	3000 3450 3250 3450
-Wire Wire Line
-	3250 3350 3250 3100
-Wire Wire Line
-	3250 3000 3000 3000
-Text Label 3000 3000 0    50   ~ 0
-Power
+	3000 3050 3250 3050
 Wire Wire Line
 	2650 1900 2950 1900
 Wire Wire Line
@@ -111,11 +94,11 @@ Wire Wire Line
 Text Label 3450 2000 0    50   ~ 0
 Ground
 Text Label 2950 1400 0    50   ~ 0
-Power
+VCC
 Wire Wire Line
 	2350 1300 2350 1100
 Text Label 2350 1100 0    50   ~ 0
-Power
+VCC
 Wire Wire Line
 	3250 2300 3150 2300
 Wire Wire Line
@@ -131,7 +114,7 @@ Wire Wire Line
 Wire Wire Line
 	3150 2500 3150 2650
 Text Label 3150 2150 0    50   ~ 0
-Power
+VCC
 Text Label 3150 2650 0    50   ~ 0
 Ground
 $Comp
@@ -175,11 +158,15 @@ Wire Wire Line
 Wire Wire Line
 	4350 650  4350 750 
 Text Label 4350 650  0    50   ~ 0
-Power
+VCC
 Text Label 4350 1250 0    50   ~ 0
 Ground
 Wire Wire Line
 	3250 950  2650 950 
 Wire Wire Line
 	2650 950  2650 1600
+Wire Wire Line
+	3250 2950 3000 2950
+Text Label 3000 2950 0    50   ~ 0
+VCC
 $EndSCHEMATC
