@@ -4,10 +4,10 @@
 # TableDisco
 **TableDisco** is a connected and music reactive table light. Each table light is working without any *outside* dependencies. 
 
-The first powered **TableDisco** will start a naive *WiFi-Mesh* and is the *root* of the new **TableDisco** mesh. The *root disco* act as the *sound analyzer* for the whole mesh. Each addtional powered **TableDisco** will automatically connect to the mesh.
+The first powered **TableDisco** will start a naive *WiFi-Mesh* and is the *root* of the new **TableDisco** mesh. The *root disco* acts as the *sound analyzer* for the whole mesh. Each addtional powered **TableDisco** will automatically connect to the mesh.
 
 On activation the **TableDiscos** are *"only"* pretty table lights. As soon as
-the *mode switcher* is pressed on the *root disco*, all **TableDiscos** will switch to the **Disco Mode**.
+the *mode switcher* on the *root disco* is pressed, all **TableDiscos** will switch to the **Disco Mode**.
 
 In **Disco Mode** the *root disco* will analyze the surrounding sound. By taking the volume and frequency into account, it will calculate a color and brightness. The *root disco* will then broadcast this color to the **TableDisco** mesh. Doing so, all **TableDiscos** will simultaneously react to the surrounding sound of the *root disco*.
 
