@@ -28,6 +28,7 @@ The model was designed in Fusion360. The STLs are included in the Thingiverse do
 - [SPST Switch](https://www.amazon.de/dp/B076GXD7XN)
 - MAX4466
 - TP4056 charging board (make sure you buy one rated for 1A and with integrated load protection)
+- [Battery Case](https://www.amazon.de/dp/B077XW1F9C) 
 - [Li-Ion 18650 (I used a 3350mAh one)](https://ebay.us/9vmIsS)
 - [4x WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
 - 4x M2x12mm screws
@@ -36,9 +37,9 @@ The model was designed in Fusion360. The STLs are included in the Thingiverse do
 
 ## Firmware
 
-Before building the **TableDisco** you should flash the firmware onto the Wemos D1 Mini. This way you are able to make sure, that it works before solder it.
+Before building the **TableDisco** you should flash the firmware onto the Wemos D1 Mini. This way you are able to make sure that it is functional.
 
-Open the *src/firmware* folder in [Visual Studio Code](https://code.visualstudio.com/). This project used [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code.
+Open the *src/firmware* folder in [Visual Studio Code](https://code.visualstudio.com/). This project uses [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code.
 
 To flash the firmware onto the Wemos connect it to your PC and press the *Upload* button in the status bar.
 
@@ -50,21 +51,35 @@ Aftererwards start the *Serial Monitor* and you should see some outputs like in 
 
 ## Build
 
-
-
-![TableDisco - Schematics](https://raw.githubusercontent.com/geaz/tableDisco/master/images/Schematics.png)
-
-![TableDisco - VeroBoard](https://raw.githubusercontent.com/geaz/tableDisco/master/images/VeroBoard.png)
+For the first step take the printed *Base* and *Battery Indicator*. The *Battery Indicator* has to be inserted, hollow side to the bottom, into the little hole at the side of the *Base*. Use a pliers and a bit of force. It is a pretty tight fit.
 
 ![TableDisco - 1](https://raw.githubusercontent.com/geaz/tableDisco/master/images/1.jpg)
 
+Prepare eleven ~5cm long wires and three ~12cm wires. This will be enough for the whole build. Take the three long wires and solder them onto the led strip.
+
 ![TableDisco - 2](https://raw.githubusercontent.com/geaz/tableDisco/master/images/2.jpg)
+
+A piece of the stripboard (5x7 holes - in the picture below it is 5x9 for display pusposes - a 5x7 hole piece is sufficient for the build), the resistor and the capacitor are needed for the next step. Please use the next two pictures as a reference how to solder the stripboard. I recommend to solder the resistor first, then the wires and as a last step the capacitor.
+
+![TableDisco - VeroBoard](https://raw.githubusercontent.com/geaz/tableDisco/master/images/VeroBoard.png)
 
 ![TableDisco - 3](https://raw.githubusercontent.com/geaz/tableDisco/master/images/3.jpg)
 
+Now solder the battery case onto the battery pins of the TP4056. Solder the wire labeled *Power Ground*, in the strip board picture above, to the *OUT-* pin and a single ~5cm wire to te *OUT+* pin.
+
+Take a pliers and grab the *battery indicator* and lift it up. Carefully slide the charging board into its position. **The LEDs are very easy to break. Be careful!**
+
 ![TableDisco - 4](https://raw.githubusercontent.com/geaz/tableDisco/master/images/4.jpg)
 
+Insert the SPST switch into the case and solder the single wire of the *OUT+* pin to one end and the *Power VCC* of the stripboard to the other end.
+
 ![TableDisco - 5](https://raw.githubusercontent.com/geaz/tableDisco/master/images/5.jpg)
+
+Now solder the two *Button* wires of the stripboard to the momentary switch and insert it into the case.
+
+[SWITCH PICTURE]
+
+// TODO: Mic and Wemos soldering
 
 ![TableDisco - 6](https://raw.githubusercontent.com/geaz/tableDisco/master/images/6.jpg)
 
