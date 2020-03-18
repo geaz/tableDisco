@@ -4,7 +4,7 @@
 # TableDisco
 **TableDisco** is a connected and music reactive table light. Each light is self operating and you can add as many lights as you want.
 
-[TODO GIF - Single Light, Connected Light (light mdoe, disco mode)]
+[TODO Video - Single Light, Connected Light (light mdoe, disco mode)]
 
 The first powered **TableDisco** will start a naive *WiFi-Mesh* and is the *root* of the new **TableDisco** mesh. The *root disco* acts as the *sound analyzer* for the whole mesh. Each addtional powered **TableDisco** will automatically connect to the mesh.
 
@@ -58,20 +58,21 @@ WIP
 
 ## OTA Update
 
-The **TableDisco** firmware provides the possibility for OTA (over the air) updates. To update the firmware on all **TableDiscos** you have to flash a spare *Wemos D1 Mini* device with the *updater firmware*.
+The **TableDisco** firmware provides the functionality for OTA (over the air) updates. To update the firmware on all **TableDiscos** you have to flash a spare *Wemos D1 Mini* device with the *updater firmware*.
 
-Please use the [PlatformIO IDE](https://platformio.org/platformio-ide) for this. Open the *src/updater* folder in Visual Studio Code and connect the spare device to your PC.
+Please use the [PlatformIO IDE](https://platformio.org/platformio-ide). 
 
-Upload the *updater firmware* (same procedure as uploading the firmware for the **TableDisco**) and copy the *firmware update* for the **TableDiscos** to the *src/updater/data* folder.
+Open the *src/updater* folder in Visual Studio Code (install the [PlatformIO IDE](https://platformio.org/platformio-ide) extension first) and connect the spare device to your PC. Flash the *updater firmware* (same procedure as uploading the firmware for the **TableDisco**) and copy the **TableDisco** *firmware.bin update* file to the *src/updater/data* folder.
 
-Press the *Update File System* task button in Visual Studio Code. This will copy the new firmware to the updater device.
+Press the *Upload File System image* task button in Visual Studio Code. This will copy the new firmware to the update device.
 
-To update the **TableDiscos** switch on your *updater device* (connect it to USB for example). This will create a new Access Point to which the **TableDiscos** are able to connect.
+![TableDisco - FSTask](https://raw.githubusercontent.com/geaz/tableDisco/master/images/fsupload.png)
 
-<video width="640" height="360" controls autoplay>
-  <source src="https://raw.githubusercontent.com/geaz/tableDisco/master/images/ota.mp4" type="video/mp4">
-</video>
+To update the **TableDiscos** switch on your *update device* (connect it to USB for example). This will create a new Access Point to which the **TableDiscos** are able to connect.
 
-On the **TableDiscos** hold the *mode switcher* button and switch it on. The light of the **TableDisco** will be *Cyan*. This indicates, that the **TableDisco** is in update mode and is scanning for the *update device*. The light will switch to *Yellow*, if the updater was found and that the **TableDisco** is connecting to it. The *Blue* light indicates, that the device is conencted to the updater and is downloading and installing the new firmware. **Do not switch off the devices during this step!**
+[![TableDisco - OTA](https://img.youtube.com/vi/rvlqbMQWktU/hqdefault.jpg)](https://youtu.be/rvlqbMQWktU)  
+Click picture to play video on YouTube.
+
+On the **TableDiscos** hold the *mode switcher* button and switch it on. The light of the **TableDisco** will be *Cyan*. This indicates, that the **TableDisco** is in update mode and is scanning for the *update device*. The light will switch to *Yellow*, if the updater was found and that the **TableDisco** is connecting to it. The *Blue* light indicates, that the device is connected to the updater and is downloading and installing the new firmware. **Do not switch off the devices during this step!**
 
 Afterwards the **TableDisco** will automatically restart with the new firmware installed.
