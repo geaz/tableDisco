@@ -68,10 +68,10 @@ Press the *Upload File System image* task button in Visual Studio Code. This wil
 
 ![TableDisco - FSTask](https://raw.githubusercontent.com/geaz/tableDisco/master/images/fsupload.png)
 
-To update the **TableDiscos** switch on your *update device* (connect it to USB for example). This will create a new Access Point to which the **TableDiscos** are able to connect.
+To update the **TableDiscos** switch on your *update device* (connect it to USB for example). This will create a WiFi Access Point to which the **TableDiscos** are able to connect.
 
-[![TableDisco - OTA](https://img.youtube.com/vi/rvlqbMQWktU/hqdefault.jpg)](https://youtu.be/rvlqbMQWktU)  
-Click picture to play video on YouTube.
+[![TableDisco - OTA](https://img.youtube.com/vi/ygwx93fGblA/hqdefault.jpg)](https://youtu.be/ygwx93fGblA)  
+> Click picture to play video of the process on YouTube.
 
 On the **TableDiscos** hold the *mode switcher* button and switch it on. The light of the **TableDisco** will be *Cyan*. This indicates, that the **TableDisco** is in update mode and is scanning for the *update device*. The light will switch to *Yellow*, if the updater was found and that the **TableDisco** is connecting to it. The *Blue* light indicates, that the device is connected to the updater and is downloading and installing the new firmware. **Do not switch off the devices during this step!**
 
