@@ -34,9 +34,23 @@ The model was designed in Fusion360. The STLs are included in the Thingiverse do
 - [Stripboard](https://www.amazon.com/dp/B00C9NXP94)
 - Wire
 
+## Firmware
+
+Before building the **TableDisco** you should flash the firmware onto the Wemos D1 Mini. This way you are able to make sure, that it works before solder it.
+
+Open the *src/firmware* folder in [Visual Studio Code](https://code.visualstudio.com/). This project used [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code.
+
+To flash the firmware onto the Wemos connect it to your PC and press the *Upload* button in the status bar.
+
+![TableDisco - Flash](https://raw.githubusercontent.com/geaz/tableDisco/master/images/flash.png)
+
+Aftererwards start the *Serial Monitor* and you should see some outputs like in the screenshot below. If you are able to see the output, the device is working and you are ready to build the **TableDisco**.
+
+![TableDisco - Serial](https://raw.githubusercontent.com/geaz/tableDisco/master/images/serial.png)
+
 ## Build
 
-WIP
+
 
 ![TableDisco - Schematics](https://raw.githubusercontent.com/geaz/tableDisco/master/images/Schematics.png)
 
@@ -59,8 +73,6 @@ WIP
 ## OTA Update
 
 The **TableDisco** firmware provides the functionality for OTA (over the air) updates. To update the firmware on all **TableDiscos** you have to flash a spare *Wemos D1 Mini* device with the *updater firmware*.
-
-Please use the [PlatformIO IDE](https://platformio.org/platformio-ide). 
 
 Open the *src/updater* folder in Visual Studio Code (install the [PlatformIO IDE](https://platformio.org/platformio-ide) extension first) and connect the spare device to your PC. Flash the *updater firmware* (same procedure as uploading the firmware for the **TableDisco**) and copy the **TableDisco** *firmware.bin update* file to the *src/updater/data* folder.
 
