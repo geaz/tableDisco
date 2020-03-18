@@ -68,8 +68,8 @@ Press the *Update File System* task button in Visual Studio Code. This will copy
 
 To update the **TableDiscos** switch on your *updater device* (connect it to USB for example). This will create a new Access Point to which the **TableDiscos** are able to connect.
 
-<video width="640" height="360" controls>
-  <source src="images/ota.mp4" type="video/mp4">
+<video width="640" height="360" controls autoplay>
+  <source src="https://raw.githubusercontent.com/geaz/tableDisco/master/images/ota.mp4" type="video/mp4">
 </video>
 
 On the **TableDiscos** hold the *mode switcher* button and switch it on. The light of the **TableDisco** will be *Cyan*. This indicates, that the **TableDisco** is in update mode and is scanning for the *update device*. The light will switch to *Yellow*, if the updater was found and that the **TableDisco** is connecting to it. The *Blue* light indicates, that the device is conencted to the updater and is downloading and installing the new firmware. **Do not switch off the devices during this step!**
