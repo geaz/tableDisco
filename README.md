@@ -60,7 +60,7 @@ Prepare eleven ~5cm long wires and three ~10cm wires. This will be enough for th
 
 ![TableDisco - 2](https://raw.githubusercontent.com/geaz/tableDisco/master/images/2.jpg)
 
-A piece of the stripboard (5x7 holes - in the picture below it is 5x9 for display pusposes - a 5x7 hole piece is sufficient for the build), the resistor and the capacitor are needed for the next step. Please use the next two pictures as a reference how to solder the stripboard. I recommend to solder the resistor first, then the wires and as a last step the capacitor.
+A piece of the stripboard (5x7 holes - in the picture below it is 5x9 for display pusposes - a 5x7 hole piece is sufficient for the build), the resistor and the capacitor are needed for the next step. Please use the next two pictures as a reference how to solder the stripboard. I recommend to solder the resistor first, then the wires and as a last step the capacitor (keep the polarity of the capacitor in mind).
 
 ![TableDisco - VeroBoard](https://raw.githubusercontent.com/geaz/tableDisco/master/images/VeroBoard.png)
 
@@ -81,7 +81,7 @@ Solder the last ~5cm wire to the *OUT* pin of the microphone (MAX4466) and addit
 
 ![TableDisco - 5.1](https://raw.githubusercontent.com/geaz/tableDisco/master/images/5.1.jpg)
 
-Take the *Middle*, the *Transparent* part and the *Top* and close the **TableDisco**. First use the *Middle* and tape the LEDs on it.
+Take the *Middle*, the *Transparent* part and the *Top*. First use the *Middle* and tape the LEDs on it.
 
 ![TableDisco - 6](https://raw.githubusercontent.com/geaz/tableDisco/master/images/6.jpg)
 
@@ -95,7 +95,7 @@ Your **TableDisco** is done!
 
 The **TableDisco** firmware provides the functionality for OTA (over the air) updates. To update the firmware on all **TableDiscos** you have to flash a spare *Wemos D1 Mini* device with the *updater firmware*.
 
-Open the *src/updater* folder in Visual Studio Code (install the [PlatformIO IDE](https://platformio.org/platformio-ide) extension first) and connect the spare device to your PC. Flash the *updater firmware* (same procedure as uploading the firmware for the **TableDisco**) and copy the **TableDisco** *firmware.bin update* file to the *src/updater/data* folder.
+Open the *src/updater* folder in Visual Studio Code and connect the spare device to your PC. Flash the *updater firmware* (same procedure as uploading the firmware for the **TableDisco**) and copy the **TableDisco** *firmware.bin update* file to the *src/updater/data* folder.
 
 Press the *Upload File System image* task button in Visual Studio Code. This will copy the new firmware to the update device.
 
@@ -103,9 +103,9 @@ Press the *Upload File System image* task button in Visual Studio Code. This wil
 
 To update the **TableDiscos** switch on your *update device* (connect it to USB for example). This will create a WiFi Access Point to which the **TableDiscos** are able to connect.
 
-[![TableDisco - OTA](https://img.youtube.com/vi/ygwx93fGblA/hqdefault.jpg)](https://youtu.be/ygwx93fGblA)  
-> Click picture to play video of the process on YouTube.
-
 On the **TableDiscos** hold the *mode switcher* button and switch it on. The light of the **TableDisco** will be *Cyan*. This indicates, that the **TableDisco** is in update mode and is scanning for the *update device*. The light will switch to *Yellow*, if the updater was found and that the **TableDisco** is connecting to it. The *Blue* light indicates, that the device is connected to the updater and is downloading and installing the new firmware. **Do not switch off the devices during this step!**
 
 Afterwards the **TableDisco** will automatically restart with the new firmware installed.
+
+[![TableDisco - OTA](https://img.youtube.com/vi/ygwx93fGblA/hqdefault.jpg)](https://youtu.be/ygwx93fGblA)  
+> Click picture to play video of the process on YouTube.
