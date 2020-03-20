@@ -34,6 +34,7 @@ The model was designed in Fusion360. The STLs are included in the Thingiverse do
 - 4x M2x12mm screws
 - [Stripboard](https://www.amazon.com/dp/B00C9NXP94)
 - Wire
+- Double-faced adhesive tape
 
 ## Firmware
 
@@ -55,7 +56,7 @@ For the first step take the printed *Base* and *Battery Indicator*. The *Battery
 
 ![TableDisco - 1](https://raw.githubusercontent.com/geaz/tableDisco/master/images/1.jpg)
 
-Prepare eleven ~5cm long wires and three ~12cm wires. This will be enough for the whole build. Take the three long wires and solder them onto the led strip.
+Prepare eleven ~5cm long wires and three ~10cm wires. This will be enough for the whole build. Take the three long wires and solder them onto the led strip.
 
 ![TableDisco - 2](https://raw.githubusercontent.com/geaz/tableDisco/master/images/2.jpg)
 
@@ -67,7 +68,7 @@ A piece of the stripboard (5x7 holes - in the picture below it is 5x9 for displa
 
 Now solder the battery case onto the battery pins of the TP4056. Solder the wire labeled *Power Ground*, in the strip board picture above, to the *OUT-* pin and a single ~5cm wire to te *OUT+* pin.
 
-Take a pliers and grab the *battery indicator* and lift it up. Carefully slide the charging board into its position. **The LEDs are very easy to break. Be careful!**
+Take a pliers and grab the *battery indicator* and lift it up. Carefully slide the charging board into its position. **The LEDs are very easy to break. Be careful!** Use double-faced adhesive tape to mount the battery case into the *Base*.
 
 ![TableDisco - 4](https://raw.githubusercontent.com/geaz/tableDisco/master/images/4.jpg)
 
@@ -76,12 +77,17 @@ Insert the SPST switch into the case and solder the single wire of the *OUT+* pi
 ![TableDisco - 5](https://raw.githubusercontent.com/geaz/tableDisco/master/images/5.jpg)
 
 Now solder the two *Button* wires of the stripboard to the momentary switch and insert it into the case.
+Solder the last ~5cm wire to the *OUT* pin of the microphone (MAX4466) and additionaly the two *Mic* wires of the stripboard to the *VCC* and *GND*. Insert the MAX4466 into the last whole of the *Base*.
 
-[SWITCH PICTURE]
+![TableDisco - 5.1](https://raw.githubusercontent.com/geaz/tableDisco/master/images/5.1.jpg)
 
-// TODO: Mic and Wemos soldering
+Take the *Middle*, the *Transparent* part and the *Top* and close the **TableDisco**. First use the *Middle* and tape the LEDs on it.
 
 ![TableDisco - 6](https://raw.githubusercontent.com/geaz/tableDisco/master/images/6.jpg)
+
+Place the *Transparent* and finally the *Top* on it. Insert the *Bolts* and use the screws to lock the **TableDisco**.
+
+Your **TableDisco** is done!
 
 ![TableDisco - 7](https://raw.githubusercontent.com/geaz/tableDisco/master/images/7.jpg)
 
