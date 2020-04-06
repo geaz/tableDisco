@@ -1,5 +1,5 @@
 [![Thingiverse](https://img.shields.io/badge/Thingiverse-TableDisco-blue.svg)](https://www.thingiverse.com/thing:3671784)
-[![Thingiverse](https://img.shields.io/badge/Github-TableDisco-brightgreen.svg)](https://github.com/geaz/tableDisco)
+[![Github](https://img.shields.io/badge/Github-TableDisco-brightgreen.svg)](https://github.com/geaz/tableDisco)
 
 # TableDisco
 **TableDisco** is a connected and music reactive table light. Each light is self operating and you can add as many lights as you want.
