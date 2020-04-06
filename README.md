@@ -1,4 +1,4 @@
-[![Thingiverse](https://img.shields.io/badge/Thingiverse-TableDisco-blue.svg)](https://www.thingiverse.com/thing:3671784)
+[![3D2P](https://img.shields.io/badge/3D2P-TableDisco-orange.svg)](https://3d2p.net/Project/CX0TQMEKNKIA2N85FOFMDW)
 [![Github](https://img.shields.io/badge/Github-TableDisco-brightgreen.svg)](https://github.com/geaz/tableDisco)
 
 # TableDisco
